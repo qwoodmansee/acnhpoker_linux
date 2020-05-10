@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import './App.css';
-import Autocomplete from './autocomplete';
-import getItems from './items';
+import Autocomplete from './components/autocomplete';
+import getItems from './data/items';
 
 const ACNH_POKER_API_URL = 'http://localhost:5000';
 

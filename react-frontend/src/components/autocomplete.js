@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import ItemList from './components/item-list';
+import ItemList from './item-list';
 
 export default function Autocomplete({options, onSelectedItemId, selectedItemId}) {
   const [filteredOptions, setFilteredOptions] = useState([]);
