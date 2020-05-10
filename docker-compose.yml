@@ -1,0 +1,24 @@
+version: '3'
+services:
+  frontend:
+    stdin_open: true
+    tty: true
+    build:
+      context: 'react-frontend'
+    volumes:
+      - "./react-frontend/src:/app/src"
+      - "./react-frontend/public:/app/public"
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+  backend:
+    build:
+      context: 'python-backend'
+    volumes:
+      - "./python-backend/main.py:/app/main.py"
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"
+
