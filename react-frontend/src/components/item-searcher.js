@@ -1,8 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import ItemList from './item-list';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 
-export default function Autocomplete({options, onSelectedItemId, selectedItemId}) {
+export default function ItemSearcher({options, onSelectedItemId, selectedItemId}) {
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [userInput, setUserInput] = useState('');
 
@@ -23,10 +26,14 @@ export default function Autocomplete({options, onSelectedItemId, selectedItemId}
   }, [onSelectedItemId, options]);
 
   return (
-    <div className="search">
-      <input
-        type="text"
-        className="search-box"
+    <Container>
+      <Typography variant="h4" component="h1" gutterBottom>
+          Search for an item
+      </Typography>
+      <TextField 
+        id="search-box" 
+        label="Item Name" 
+        variant="outlined" 
         onChange={onSearchChange}
         value={userInput}
       />
@@ -35,11 +42,11 @@ export default function Autocomplete({options, onSelectedItemId, selectedItemId}
         items={filteredOptions}
         selectedItemId={selectedItemId}
       />
-    </div>
+    </Container>
   );
 }
 
-Autocomplete.propTypes = {
+ItemSearcher.propTypes = {
   options: PropTypes.instanceOf(Array).isRequired,
   onSelectedItemId: PropTypes.func,
   selectedItemId: PropTypes.string,
