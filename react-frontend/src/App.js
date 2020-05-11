@@ -1,29 +1,16 @@
 import React, { useCallback, useState } from 'react';
-import './App.css';
-import Autocomplete from './autocomplete';
-import getItems from './items';
-
-const ACNH_POKER_API_URL = 'http://localhost:5000';
+import ItemSearcher from './components/item-searcher';
+import InputForm from './components/input-form';
+import getItems from './data/items';
+import { sendItemToSwitch } from './api/poker-endpoints';
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
 
 const items = getItems();
 
-async function postData(url = '', data = {}) {
-  // Default options are marked with *
-  const response = await fetch(url, {
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    mode: 'no-cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: JSON.stringify(data) // body data type must match "Content-Type" header
-  });
-  return response.json(); // parses JSON response into native JavaScript objects
-}
-
 function App() {
   const [itemId, setItemId] = useState('');
+  const [switchIpAddress, setSwitchIpAddress] = useState('');
   const [itemCount, setItemCount] = useState(1);
   const [isSending, setIsSending] = useState(false);
 
@@ -35,48 +22,49 @@ function App() {
     setItemCount(event.target.value);
   }, []);
 
+  const onSwitchIpInput = useCallback((event) => {
+    setSwitchIpAddress(event.target.value);
+  }, []);
+
   const handleSubmit = useCallback(async () => {
     setIsSending(true);
     try {
-      await postData(ACNH_POKER_API_URL + '/add', {itemId, itemCount});
+      await sendItemToSwitch({
+        switchIpAddress,
+        itemId,
+        itemCount,
+      })
       setIsSending(false);
     } catch {
       setIsSending(false);
     }
-  }, [itemId, itemCount]);
+  }, [itemId, itemCount, switchIpAddress]);
 
-  const handleAutoCompleteSelection = (selectedItemId) => {
+  const handleItemSelection = (selectedItemId) => {
     setItemId(selectedItemId);
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
+    <Container>
+      <Typography variant="h4" component="h1" gutterBottom>
           Welcome to the Animal Crossing New Horizons Item Editor
-        </p> 
-      </header>
-      <section className="app-body">
-       <form onSubmit={handleSubmit}>
-          <label>
-            Item ID:
-            <input type="text" name="itemId" value={itemId} onChange={onItemIdInput}/>
-          </label>
-          <label>
-            Count:
-            <input type="text" name="itemCount" value={itemCount} onChange={onItemCountInput}/>
-          </label>
-          <input type="submit" value="Send Item" />
-        </form>
-        <p>Search:</p>
-        <Autocomplete
-          options={items}
-          selectedItem={itemId}
-          onSelectedItemId={handleAutoCompleteSelection}
-        />
-      </section>
+      </Typography>
+      <InputForm
+        onSubmit={handleSubmit}
+        itemId={itemId}
+        onItemIdChange={onItemIdInput}
+        itemCount={itemCount}
+        onItemCountChange={onItemCountInput}
+        switchIp={switchIpAddress}
+        onSwitchIpChange={onSwitchIpInput}
+      />
+      <ItemSearcher
+        options={items}
+        selectedItem={itemId}
+        onSelectedItemId={handleItemSelection}
+      />
       {isSending && <h1>Sending Item...</h1>}
-    </div>
+    </Container>
   );
 }
 
