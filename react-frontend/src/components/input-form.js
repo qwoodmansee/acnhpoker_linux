@@ -22,13 +22,31 @@ export default function InputForm({
       alignItems="center"
       >
         <Grid item xs>
-          <TextField id="switch-ip" label="Switch IP Address" variant="filled" />
+          <TextField 
+            id="switch-ip" 
+            label="Switch IP Address" 
+            variant="filled"
+            value={switchIp}
+            onChange={onSwitchIpChange}
+          />
         </Grid>
         <Grid item xs>
-          <TextField id="item-id" label="Item ID" variant="filled" />
+          <TextField 
+            id="item-id"
+            label="Item ID"
+            variant="filled" 
+            value={itemId}
+            onChange={onItemIdChange}
+          />
         </Grid>
         <Grid item xs>
-          <TextField id="item-count" label="How Many?" variant="filled" />
+          <TextField
+            id="item-count"
+            label="How Many?"
+            variant="filled"
+            value={itemCount}
+            onChange={onItemCountChange}
+          />
         </Grid>
       </Grid>
   );
